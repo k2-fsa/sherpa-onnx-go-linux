@@ -616,6 +616,9 @@ func (s *OfflineStream) GetResult() *OfflineRecognizerResult {
 	result.Emotion = C.GoString(p.emotion)
 	result.Event = C.GoString(p.event)
 	n := int(p.count)
+	if n == 0 {
+		return nil
+	}
 	result.Tokens = make([]string, n)
 	tokens := (*[1 << 28]*C.char)(unsafe.Pointer(p.tokens_arr))[:n:n]
 	for i := 0; i < n; i++ {
