@@ -926,6 +926,8 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOfflineTtsKokoroModelConfig {
   const char *data_dir;
 
   float length_scale;  // < 1, faster in speech speed; > 1, slower in speed
+  const char *dict_dir;
+  const char *lexicon;
 } SherpaOnnxOfflineTtsKokoroModelConfig;
 
 SHERPA_ONNX_API typedef struct SherpaOnnxOfflineTtsModelConfig {
@@ -942,6 +944,7 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOfflineTtsConfig {
   const char *rule_fsts;
   int32_t max_num_sentences;
   const char *rule_fars;
+  float silence_scale;
 } SherpaOnnxOfflineTtsConfig;
 
 SHERPA_ONNX_API typedef struct SherpaOnnxGeneratedAudio {
@@ -1644,6 +1647,10 @@ SHERPA_ONNX_API const SherpaOnnxSpeakerEmbeddingExtractor *
 SherpaOnnxCreateSpeakerEmbeddingExtractorOHOS(
     const SherpaOnnxSpeakerEmbeddingExtractorConfig *config,
     NativeResourceManager *mgr);
+
+SHERPA_ONNX_API const SherpaOnnxKeywordSpotter *
+SherpaOnnxCreateKeywordSpotterOHOS(const SherpaOnnxKeywordSpotterConfig *config,
+                                   NativeResourceManager *mgr);
 
 SHERPA_ONNX_API const SherpaOnnxOfflineSpeakerDiarization *
 SherpaOnnxCreateOfflineSpeakerDiarizationOHOS(
