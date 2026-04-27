@@ -880,6 +880,26 @@ func NewOfflineStream(recognizer *OfflineRecognizer) *OfflineStream {
 	return stream
 }
 
+// NewOfflineStreamWithHotwords creates a stream with per-stream hotwords for
+// contextual biasing. Hotwords are tokens separated by space, phrases by '/'.
+// For BPE-based transducer models the tokens are BPE pieces preceded by '▁',
+// e.g. "▁I ▁LOVE ▁YOU/▁HELLO ▁WORLD".
+//
+// Only transducer recognizers support contextual biasing. Calling this on a
+// CTC, Paraformer, SenseVoice or Whisper recognizer will abort the process
+// (this is enforced inside sherpa-onnx upstream).
+//
+// The user is responsible to invoke [DeleteOfflineStream]() to free the
+// returned stream to avoid memory leak.
+func NewOfflineStreamWithHotwords(recognizer *OfflineRecognizer, hotwords string) *OfflineStream {
+	chw := C.CString(hotwords)
+	defer C.free(unsafe.Pointer(chw))
+
+	stream := &OfflineStream{}
+	stream.impl = C.SherpaOnnxCreateOfflineStreamWithHotwords(recognizer.impl, chw)
+	return stream
+}
+
 // Input audio samples for the offline stream.
 // Please only call it once. That is, input all samples at once.
 //
